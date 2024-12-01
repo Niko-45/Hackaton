@@ -34,7 +34,11 @@
                 <a href="{% url 'profile_view' student.id %}" class="text-blue-500 hover:underline block mb-2">
                 <div class="flex items-center space-x-5 border border-gray-300 rounded-2xl bg-white p-6 transition-transform transform group-hover:scale-105 hover:shadow-2xl">
                     <div class="w-20 h-20 rounded-full overflow-hidden">
-                        <img src="{{ student.photo.url }}" alt="{{ student.name }}" class="w-full h-full object-cover">
+                        <img src="{{ student.face_image.url }}" alt="{{ student.name }}" class="w-full h-full object-cover" onerror="this.src='default.jpg';">
+
+
+
+
                     </div>
                     <div>
                         <!-- Profile Link -->

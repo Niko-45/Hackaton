@@ -5,7 +5,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .forms import StudentForm  # Import the StudentForm
 from .models import Student  # Import the Student model
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import *
+from .forms import *
 
 def register(request):
     if request.method == 'POST':
@@ -43,7 +46,10 @@ def home(request):
     if not request.user.is_authenticated: 
         return redirect('login')  
     
-    return render(request, 'home.html')  
+    student_count = Student.objects.count()  # Öğrenci sayısını al
+    attended_count = Student.objects.filter(attendance=True).count()  # Katılan öğrenci sayısını al
+    not_attended_count = Student.objects.filter(attendance=False).count()  # Katılmayan öğrenci sayısını al
+    return render(request, 'home.html', {'student_count': student_count, 'attended_count': attended_count, 'not_attended_count': not_attended_count})  # Öğrenci sayısını, katılan sayısını ve katılmayan sayısını template'e geçir
 
 
 def logout_view(request):
@@ -68,15 +74,14 @@ def create_student(request):
 
     return render(request, 'create_student.html', {'form': form})
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from .models import *
-from .forms import *
+
 
 # View to list all students
 def student_list(request):
-    students = Student.objects.all()
+    students = Student.objects.select_related('course').all().count()
+
     return render(request, 'student_list.html', {'students': students})
+
 
 # View to update student
 def update_student(request, id):
