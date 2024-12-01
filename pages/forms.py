@@ -18,8 +18,6 @@ class CourseForm(forms.ModelForm):
         model = Course
         fields = "__all__"
 
-from django import forms
-from .models import Profile
 
 class ProfileForm(forms.ModelForm):
     class Meta:

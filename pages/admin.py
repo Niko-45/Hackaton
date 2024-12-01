@@ -1,6 +1,8 @@
 from django.contrib import admin
-from .models import User, Course, Student
+from .models import User, Course, Student, Attendance
 from .forms import UserForm, CourseForm, StudentForm
+
+admin.site.register([User,Course,Student,Attendance])
 
 class UserAdmin(admin.ModelAdmin):
     form = UserForm
