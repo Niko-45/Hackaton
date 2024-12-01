@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course List</title>
+</head>
+<body>
+    <h1>Course List</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.time }}</td>
+            
+                    <td>
+                        <a href="{% url 'update_course' course.id %}">Edit</a> | 
+                        <a href="{% url 'delete_course' course.id %}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'create_course' %}">Create New Course</a>
+    <a href="{% url 'create_student' %}" style="margin-left: 20px;">Create New Student</a>
+    <br>
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>

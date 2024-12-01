@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="flex">
+        <header class="sticky top-0 py-10 w-[20%] flex-col flex bg-purple-500 text-start leading-[60px] h-screen text-gray-500 rounded-br-2xl">
+            <img src="" alt="" class="mb-5 mx-auto w-[80px] h-[80px] rounded-full bg-gray-200">
+            <a class="focus:bg-purple-500 bg-purple-300 px-5 py-2 focus:text-white hover:bg-purple-400" href="{% url 'home' %}">Dashboard</a>
+            <a class="focus:bg-purple-500 bg-purple-500 px-5 py-2 text-white focus:text-white hover:bg-purple-400" href="{% url 'student_list' %}">Students</a>
+            <a class="focus:bg-purple-500 bg-purple-300 px-5 py-2 focus:text-white hover:bg-purple-400" href="#">Groups</a>
+            <a class="focus:bg-purple-500 bg-purple-300 px-5 py-2 focus:text-white hover:bg-purple-400" href="#">Employers</a>
+            <a class="focus:bg-purple-500 bg-purple-300 px-5 py-2 focus:text-white hover:bg-purple-400" href="#">Time Table</a>
+            <a class="focus:bg-purple-500 bg-purple-300 px-5 py-2 focus:text-white hover:bg-purple-400" href="#">Courses</a>
+            <a class="focus:bg-purple-500 bg-purple-300 px-5 py-2 focus:text-white hover:bg-purple-400" href="#">Branches</a>
+        </header>
+        <div class="w-4/5 mx-auto">
+            <div class="bg-purple-600 text-white p-6 flex justify-between items-center mb-12 shadow-lg">
+                <p class="text-4xl font-extrabold">Students</p>
+                <!-- Logout Button -->
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-700 transition duration-300">
+                        Log out
+                    </button>
+                </form>
+            </div>
+            <section class="w-[90%] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for student in students %}
+                <a href="{% url 'profile_view' student.id %}" class="text-blue-500 hover:underline block mb-2">
+                <div class="flex items-center space-x-5 border border-gray-300 rounded-2xl bg-white p-6 transition-transform transform group-hover:scale-105 hover:shadow-2xl">
+                    <div class="w-20 h-20 rounded-full overflow-hidden">
+                        <img src="{{ student.photo.url }}" alt="{{ student.name }}" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <!-- Profile Link -->
+                        
+                            <p class="text-3xl font-semibold text-gray-800 group-hover:text-purple-600 transition duration-300">{{ student.name }}</p>
+                            <p class="text-sm text-gray-500 mt-2">Student of {{ student.student_course.name }}</p>
+                        </div>
+                    </div>
+                </a>
+                
+                {% endfor %}
+            </section>
+        </div>
+    </div>
+</body>
+</html>

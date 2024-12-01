@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.name }}'s Profile</title>
+    <link rel="stylesheet" href="output.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 20px;
+    }
+
+    .analytics {
+        display: inline-block;
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 80%;
+        max-width: 600px;
+    }
+
+    .summary {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .summary div {
+        text-align: center;
+    }
+
+    .summary div span {
+        display: block;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="flex">
+        <header class="sticky top-0 py-10 w-[20%] flex-col flex bg-blue-500 text-start leading-[60px] h-screen text-gray-500 rounded-br-2xl">
+            <a href="profile.html"><img src="{{ student.photo.url }}" alt="{{ student.name }}'s photo" class="mb-5 mx-auto w-[80px] h-[80px] rounded-full bg-gray-200"></a>
+            <a class="focus:bg-blue-500 bg-blue-300 px-5 py-2 focus:text-white hover:bg-blue-400" href="index.html">Dashboard</a>
+            <a class="focus:bg-blue-500 bg-blue-500 px-5 py-2 text-white focus:text-white hover:bg-blue-400" href="student.html">Students</a>
+            <a class="focus:bg-blue-500 bg-blue-300 px-5 py-2 focus:text-white hover:bg-blue-400" href="#">Groups</a>
+            <a class="focus:bg-blue-500 bg-blue-300 px-5 py-2 focus:text-white hover:bg-blue-400" href="#">Employers</a>
+            <a class="focus:bg-blue-500 bg-blue-300 px-5 py-2 focus:text-white hover:bg-blue-400" href="#">Time Table</a>
+            <a class="focus:bg-blue-500 bg-blue-300 px-5 py-2 focus:text-white hover:bg-blue-400" href="#">Courses</a>
+            <a class="focus:bg-blue-500 bg-blue-300 px-5 py-2 focus:text-white hover:bg-blue-400" href="#">Branches</a>
+        </header>
+        <div class="w-[80%] flex flex-col">
+            <div>
+                <div class="bg-blue-600 text-white p-6 flex justify-between items-center mb-12 shadow-lg">
+                    <p class="text-4xl font-extrabold">About {{ student.name }}</p>
+                    <a href="student.html"><button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition duration-300">Go Back</button></a>
+                </div>
+                <div class="flex mt-12 justify-center items-center">
+                    <div class="w-[45%] mx-auto bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex items-center space-x-6">
+                            <img src="{{ student.photo.url }}" alt="{{ student.name }}'s photo" class="w-24 h-24 rounded-full object-cover shadow-md">
+                            <div>
+                                <p class="text-4xl font-extrabold text-gray-800">{{ student.name }}</p>
+                                <p class="text-sm text-gray-500 mt-2">Student</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 space-y-4">
+                            <div class="leading-8 border rounded-xl px-5 py-6 border-gray-300 bg-gray-100 shadow-inner">
+                                <p class="text-sm text-gray-600 flex justify-between">Registered: <b>{{ student.registration_date }}</b></p>
+                                <p class="text-sm text-gray-600 flex justify-between">Branch: <b>{{ student.branch }}</b></p>
+                                <p class="text-sm text-gray-600 flex justify-between">Birthday: <b>{{ student.birth_date }}</b></p>
+                                <p class="text-sm text-gray-600 flex justify-between">Address: <b>{{ student.address }}</b></p>
+                                <p class="text-sm text-gray-600 flex justify-between">Age: <b>{{ student.age }}</b></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-[50%] bg-white p-6 rounded-xl shadow-lg ml-10">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-3xl font-semibold text-gray-800">Performance Overview</h2>
+                            <p class="text-lg text-gray-600">
+                                <button class="bg-gray-200 hover:bg-gray-400 p-1 rounded-xl">&lt;</button> Week 1 <button class="bg-gray-200 hover:bg-gray-400 p-1 rounded-xl">&gt;</button>
+                            </p>
+                        </div>
+                        <div class="mt-6 space-y-4">
+                            <div class="bg-green-200 text-green-800 flex rounded-lg px-6 py-3 items-center gap-2 shadow-md">
+                                <span class="font-semibold text-lg">{{ student.performance.present }} hours</span> Present
+                            </div>
+                            <div class="bg-red-200 text-red-800 flex rounded-lg px-6 py-3 items-center gap-2 shadow-md">
+                                <span class="font-semibold text-lg">{{ student.performance.absent }} hours</span> Absent
+                            </div>
+                            <div class="bg-orange-200 text-orange-800 flex rounded-lg px-6 py-3 items-center gap-2 shadow-md">
+                                <span class="font-semibold text-lg">{{ student.performance.late }} mins</span> Late
+                            </div>
+                        </div>
+                        <div class="my-6">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Nov 25', 'Nov 26', 'Nov 27', 'Nov 28', 'Nov 29', 'Nov 30'],
+                datasets: [{
+                    label: 'Performance',
+                    data: [6, 2, 1, 1, 0.5, 0],
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#007bff',
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Hours'
+                        },
+                        grid: {
+                            color: '#e2e8f0'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        },
+                        grid: {
+                            color: '#e2e8f0'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

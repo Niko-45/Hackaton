@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% load static %}
+</head>
+
+<body class="bg-gray-300 h-screen flex items-center justify-center">
+    <div class="w-[90%] flex flex-wrap justify-between items-center mx-auto">
+
+        <!-- Login Form Section -->
+        <div class="w-[45%] flex flex-col border py-10 px-5 bg-white space-y-5 border-gray-300 rounded-[40px] shadow-lg mt-10">
+            <p class="text-blue-500 underline text-center text-2xl font-bold">Log in</p>
+            {% if messages %}
+                <ul class="w-[80%] mx-auto">
+                    {% for message in messages %}
+                        <li class="alert {{ message.tags }} text-red-500 text-sm">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <fieldset class="border border-gray-300 rounded-md p-1 w-[80%] flex flex-col mx-auto">
+                    <legend class="ml-2">User name</legend>
+                    <input class="p-[5px] outline-none text-gray-500 rounded-md" type="text" name="username"
+                        placeholder="" required>
+                </fieldset>
+                <fieldset class="border border-gray-300 rounded-md p-1 w-[80%] flex flex-col mx-auto">
+                    <legend class="ml-2">Password</legend>
+                    <input type="password" name="password" class="p-[5px] outline-none text-gray-500 rounded-md" required
+                        minlength="8">
+                </fieldset>
+                <div class="flex justify-center">
+                    <button
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold w-[75%] py-2 my-2 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105">
+                        Log in
+                    </button>
+                </div>
+            </form>
+            <p class="w-[80%] mx-auto">Don't have an account? <a href="{% url 'register' %}"
+                    class="hover:underline text-blue-400">Register here</a></p>
+        </div>
+
+        <!-- Image Section with More Rounded Corners -->
+        <div class="w-[45%] bg-white rounded-[40px] flex flex-col justify-center items-center h-[70%] mt-10 shadow-lg">
+            <p class="text-blue-500 text-2xl font-bold text-center">Welcome Back!</p> <!-- Text Color Blue -->
+            <img src="{% static 'images/7ef737e0e8f64976b8926a0d11ab30c8-free.png' %}" alt="CRM" class="w-[75%] h-auto mt-5">
+        </div>
+
+    </div>
+</body>
+
+</html>
